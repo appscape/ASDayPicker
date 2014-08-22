@@ -1,0 +1,316 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C758976919A7566B006AAFBC /* ASDayPickerSampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C758976619A7566B006AAFBC /* ASDayPickerSampleAppDelegate.m */; };
+		C758976A19A7566B006AAFBC /* ASDayPickerSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C758976819A7566B006AAFBC /* ASDayPickerSampleViewController.m */; };
+		C758976C19A75803006AAFBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C758976B19A75803006AAFBC /* Main.storyboard */; };
+		C758976D19A758CC006AAFBC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C75FB5F919A753A400FB3232 /* main.m */; };
+		C75FB5EE19A753A400FB3232 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75FB5ED19A753A400FB3232 /* Foundation.framework */; };
+		C75FB5F019A753A400FB3232 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75FB5EF19A753A400FB3232 /* CoreGraphics.framework */; };
+		C75FB5F219A753A400FB3232 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75FB5F119A753A400FB3232 /* UIKit.framework */; };
+		C75FB62B19A7552600FB3232 /* ASDayPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = C75FB62A19A7552600FB3232 /* ASDayPicker.m */; };
+		C77EF32919AB6E4100C75440 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C77EF32819AB6E4100C75440 /* Images.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C758976519A7566B006AAFBC /* ASDayPickerSampleAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDayPickerSampleAppDelegate.h; sourceTree = SOURCE_ROOT; };
+		C758976619A7566B006AAFBC /* ASDayPickerSampleAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDayPickerSampleAppDelegate.m; sourceTree = SOURCE_ROOT; };
+		C758976719A7566B006AAFBC /* ASDayPickerSampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDayPickerSampleViewController.h; sourceTree = SOURCE_ROOT; };
+		C758976819A7566B006AAFBC /* ASDayPickerSampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDayPickerSampleViewController.m; sourceTree = SOURCE_ROOT; };
+		C758976B19A75803006AAFBC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = SOURCE_ROOT; };
+		C75FB5EA19A753A300FB3232 /* ASDayPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASDayPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C75FB5ED19A753A400FB3232 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C75FB5EF19A753A400FB3232 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C75FB5F119A753A400FB3232 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C75FB5F519A753A400FB3232 /* ASDayPickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ASDayPickerSample-Info.plist"; sourceTree = "<group>"; };
+		C75FB5F919A753A400FB3232 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C75FB5FB19A753A400FB3232 /* ASDayPickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ASDayPickerSample-Prefix.pch"; sourceTree = "<group>"; };
+		C75FB60F19A753A400FB3232 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		C75FB62919A7552600FB3232 /* ASDayPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDayPicker.h; sourceTree = "<group>"; };
+		C75FB62A19A7552600FB3232 /* ASDayPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDayPicker.m; sourceTree = "<group>"; };
+		C77EF32819AB6E4100C75440 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C75FB5E719A753A300FB3232 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C75FB5F019A753A400FB3232 /* CoreGraphics.framework in Frameworks */,
+				C75FB5F219A753A400FB3232 /* UIKit.framework in Frameworks */,
+				C75FB5EE19A753A400FB3232 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C75FB5E119A753A300FB3232 = {
+			isa = PBXGroup;
+			children = (
+				C75FB62519A7540C00FB3232 /* ASDayPicker */,
+				C75FB5F319A753A400FB3232 /* Sample */,
+				C75FB5EC19A753A300FB3232 /* Frameworks */,
+				C75FB5EB19A753A300FB3232 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C75FB5EB19A753A300FB3232 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C75FB5EA19A753A300FB3232 /* ASDayPickerSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C75FB5EC19A753A300FB3232 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C75FB5ED19A753A400FB3232 /* Foundation.framework */,
+				C75FB5EF19A753A400FB3232 /* CoreGraphics.framework */,
+				C75FB5F119A753A400FB3232 /* UIKit.framework */,
+				C75FB60F19A753A400FB3232 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C75FB5F319A753A400FB3232 /* Sample */ = {
+			isa = PBXGroup;
+			children = (
+				C758976B19A75803006AAFBC /* Main.storyboard */,
+				C758976519A7566B006AAFBC /* ASDayPickerSampleAppDelegate.h */,
+				C758976619A7566B006AAFBC /* ASDayPickerSampleAppDelegate.m */,
+				C758976719A7566B006AAFBC /* ASDayPickerSampleViewController.h */,
+				C758976819A7566B006AAFBC /* ASDayPickerSampleViewController.m */,
+				C75FB5F419A753A400FB3232 /* Supporting Files */,
+				C77EF32819AB6E4100C75440 /* Images.xcassets */,
+			);
+			name = Sample;
+			sourceTree = SOURCE_ROOT;
+		};
+		C75FB5F419A753A400FB3232 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C75FB5F519A753A400FB3232 /* ASDayPickerSample-Info.plist */,
+				C75FB5F919A753A400FB3232 /* main.m */,
+				C75FB5FB19A753A400FB3232 /* ASDayPickerSample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C75FB62519A7540C00FB3232 /* ASDayPicker */ = {
+			isa = PBXGroup;
+			children = (
+				C75FB62919A7552600FB3232 /* ASDayPicker.h */,
+				C75FB62A19A7552600FB3232 /* ASDayPicker.m */,
+			);
+			name = ASDayPicker;
+			path = ..;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C75FB5E919A753A300FB3232 /* ASDayPickerSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C75FB61F19A753A400FB3232 /* Build configuration list for PBXNativeTarget "ASDayPickerSample" */;
+			buildPhases = (
+				C75FB5E619A753A300FB3232 /* Sources */,
+				C75FB5E719A753A300FB3232 /* Frameworks */,
+				C75FB5E819A753A300FB3232 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ASDayPickerSample;
+			productName = ASDayPicker;
+			productReference = C75FB5EA19A753A300FB3232 /* ASDayPickerSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C75FB5E219A753A300FB3232 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = AS;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = appscape;
+			};
+			buildConfigurationList = C75FB5E519A753A300FB3232 /* Build configuration list for PBXProject "ASDayPickerSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C75FB5E119A753A300FB3232;
+			productRefGroup = C75FB5EB19A753A300FB3232 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C75FB5E919A753A300FB3232 /* ASDayPickerSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C75FB5E819A753A300FB3232 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C758976C19A75803006AAFBC /* Main.storyboard in Resources */,
+				C77EF32919AB6E4100C75440 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C75FB5E619A753A300FB3232 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C758976D19A758CC006AAFBC /* main.m in Sources */,
+				C75FB62B19A7552600FB3232 /* ASDayPicker.m in Sources */,
+				C758976919A7566B006AAFBC /* ASDayPickerSampleAppDelegate.m in Sources */,
+				C758976A19A7566B006AAFBC /* ASDayPickerSampleViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C75FB61D19A753A400FB3232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C75FB61E19A753A400FB3232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C75FB62019A753A400FB3232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ASDayPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/ASDayPickerSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C75FB62119A753A400FB3232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ASDayPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/ASDayPickerSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C75FB5E519A753A300FB3232 /* Build configuration list for PBXProject "ASDayPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C75FB61D19A753A400FB3232 /* Debug */,
+				C75FB61E19A753A400FB3232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C75FB61F19A753A400FB3232 /* Build configuration list for PBXNativeTarget "ASDayPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C75FB62019A753A400FB3232 /* Debug */,
+				C75FB62119A753A400FB3232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C75FB5E219A753A300FB3232 /* Project object */;
+}

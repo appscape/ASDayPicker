@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="z2G-FE-9mW">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Day Picker Sample View Controller-->
+        <scene sceneID="J5P-Ws-49l">
+            <objects>
+                <viewController id="z2G-FE-9mW" customClass="ASDayPickerSampleViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Y3g-Wu-mfs"/>
+                        <viewControllerLayoutGuide type="bottom" id="qO1-mF-X0U"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DQw-t7-cia">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cpd-eM-qoS" customClass="ASDayPicker">
+                                <rect key="frame" x="0.0" y="252" width="320" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="Och-ce-Trr"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Tx-FG-ZCt">
+                                <rect key="frame" x="139" y="336" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="8Tx-FG-ZCt" secondAttribute="centerX" id="Z0j-hq-Akz"/>
+                            <constraint firstAttribute="centerY" secondItem="cpd-eM-qoS" secondAttribute="centerY" id="Z8Z-vE-LVR"/>
+                            <constraint firstAttribute="trailing" secondItem="cpd-eM-qoS" secondAttribute="trailing" id="hb9-lx-woI"/>
+                            <constraint firstItem="cpd-eM-qoS" firstAttribute="leading" secondItem="DQw-t7-cia" secondAttribute="leading" id="nwE-0M-tHX"/>
+                            <constraint firstItem="8Tx-FG-ZCt" firstAttribute="top" secondItem="cpd-eM-qoS" secondAttribute="bottom" constant="20" id="uuf-B5-eT5"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="dayPicker" destination="cpd-eM-qoS" id="a2P-Ul-XGP"/>
+                        <outlet property="selectedDayLabel" destination="8Tx-FG-ZCt" id="SQW-CQ-1Yy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VsC-2Z-HEH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="171" y="31"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
