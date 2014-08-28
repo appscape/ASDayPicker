@@ -7,14 +7,14 @@
 
 #import "ASDayPicker.h"
 
-static const CGFloat kHorizontalInset = 6.0f;
+static const UIEdgeInsets kDefaultInsets = {0,6.0f,0,6.0f};
 static const CGFloat kWeekdayLabelHeight = 20.0f;
 
 @interface ASDayPicker()<UIScrollViewDelegate> {
     NSCalendar *_calendar;
 
     NSArray *_weekdayTitles;
-    NSMutableArray *_weekdayLayers;
+    NSMutableArray *_weekdayLabels;
 
     UIScrollView *_daysScrollView;
 
@@ -32,6 +32,8 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 - (void)setup {
     _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 
+    _edgeInsets = kDefaultInsets;
+
     _daysScrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
     _daysScrollView.showsHorizontalScrollIndicator = NO;
     _daysScrollView.pagingEnabled = YES;
@@ -39,53 +41,73 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     [self addSubview:_daysScrollView];
 
-    _weekdayLayers = [NSMutableArray array];
+    _weekdayLabels = [NSMutableArray array];
     for (NSUInteger i = 0;i<7;i++) {
-        CATextLayer *l = [CATextLayer layer];
-        l.contentsScale = [UIScreen mainScreen].scale;
-        l.foregroundColor = [UIColor blackColor].CGColor;
-        l.fontSize = 12.0;
-        l.alignmentMode = kCAAlignmentCenter;
-        [_weekdayLayers addObject:l];
-        [self.layer addSublayer:l];
+        UILabel *l = [[UILabel alloc] initWithFrame:CGRectZero];
+        l.textAlignment = NSTextAlignmentCenter;
+        [_weekdayLabels addObject:l];
+        [self addSubview:l];
     }
 
     _selectedDate = [self dateWithoutTimeFromDate:[NSDate date]];
 
-    // Get weekday titles from current calendar + locale:
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:[[NSLocale preferredLanguages] firstObject]];
-
-    NSMutableArray *wds = [NSMutableArray array];
-    for (NSString *s in df.shortWeekdaySymbols) {
-        [wds addObject:[s substringWithRange:NSMakeRange(0, 1)]];
-    }
-
-    // ..finally, normalize so monday is at index 0
-    self.weekdayTitles = [[wds subarrayWithRange:NSMakeRange(1, 6)]
-                          arrayByAddingObjectsFromArray:[wds subarrayWithRange:NSMakeRange(0,1)]];
+    self.weekdayTitles = [ASDayPicker weekdayTitlesWithLocaleIdentifier:nil
+                                                                 length:1
+                                                              uppercase:YES];
 
     self.selectedDateBackgroundImage = [ASDayPicker imageWithColor:self.tintColor];
-    self.selectedDateColor = [UIColor whiteColor];
-    self.dateColor = [UIColor blackColor];
+    self.selectedDateTextColor = [UIColor whiteColor];
+    self.dateTextColor = [UIColor blackColor];
+    self.outOfRangeDateTextColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
     self.dateFont = [UIFont systemFontOfSize:17.0f];
-    self.weekdayColor = [UIColor blackColor];
+    self.weekdayFont = [UIFont systemFontOfSize:12.0f];
+    self.weekdayTextColor = [UIColor blackColor];
 }
 
-- (void)setWeekdayColor:(UIColor *)weekdayColor {
-    for (CATextLayer *l in _weekdayLayers) {
-        l.foregroundColor = weekdayColor.CGColor;
+- (void)setSelectedDateBackgroundColor:(UIColor *)selectedDateBackgroundColor {
+    _selectedDateBackgroundColor = selectedDateBackgroundColor;
+    self.selectedDateBackgroundImage = [ASDayPicker imageWithColor:selectedDateBackgroundColor];
+}
+
+- (void)setSelectedDateBackgroundImage:(UIImage *)selectedDateBackgroundImage {
+    _selectedDateBackgroundImage = selectedDateBackgroundImage;
+    [self setNeedsLayout];
+}
+
+- (void)setEdgeInsets:(UIEdgeInsets)edgeInsets {
+    _edgeInsets = edgeInsets;
+    [self setNeedsLayout];
+}
+
+- (void)setWeekdayColor:(UIColor *)color {
+    _weekdayTextColor = color;
+    for (UILabel *l in _weekdayLabels) {
+        l.textColor = color;
     }
-    _weekdayColor = weekdayColor;
 }
 
 - (void)setWeekdayTitles:(NSArray *)weekdayTitles {
     NSParameterAssert(weekdayTitles.count == 7);
     _weekdayTitles = weekdayTitles;
     for (int i=0;i<7;i++) {
-        ((CATextLayer*)_weekdayLayers[i]).string = _weekdayTitles[i];
+        ((UILabel*)_weekdayLabels[i]).text = _weekdayTitles[i];
     }
 }
+
+- (void)setWeekdayTextColor:(UIColor *)weekdayTextColor {
+    _weekdayTextColor = weekdayTextColor;
+    for (int i=0;i<7;i++) {
+        ((UILabel*)_weekdayLabels[i]).textColor = _weekdayTextColor;
+    }
+}
+
+- (void)setWeekdayFont:(UIFont *)font {
+    _weekdayFont = font;
+    for (int i=0;i<7;i++) {
+        ((UILabel*)_weekdayLabels[i]).font = _weekdayFont;
+    }
+}
+
 
 - (void)awakeFromNib {
     [self setup];
@@ -102,29 +124,37 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     _dh = self.frame.size.height - kWeekdayLabelHeight;
     _daysScrollView.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
 
-    _dx = (self.frame.size.width - (2 * kHorizontalInset)) / 7.0f;
+    _dx = (self.frame.size.width - (_edgeInsets.left + _edgeInsets.right)) / 7.0f;
     for (NSUInteger i=0;i<7;i++) {
-        CALayer *l = _weekdayLayers[i];
-        l.frame = CGRectMake(kHorizontalInset + _dx * i, 0, _dx, kWeekdayLabelHeight);
+        UILabel *l = _weekdayLabels[i];
+        l.frame = CGRectMake(_edgeInsets.left + _dx * i, 0, _dx, kWeekdayLabelHeight);
     }
 
     [self recenter];
 }
 
-- (UIButton*)buttonForDay:(NSDate*)day index:(NSUInteger)index {
+- (UIButton*)buttonForDate:(NSDate*)date index:(NSUInteger)index {
     UIButton *b = [[UIButton alloc] init];
-    [b setTitleColor:self.dateColor forState:UIControlStateNormal];
-    [b setTitleColor:self.selectedDateColor forState:UIControlStateSelected];
+    [b setTitleColor:self.outOfRangeDateTextColor forState:UIControlStateDisabled];
+    [b setTitleColor:self.dateTextColor forState:UIControlStateNormal];
+    [b setTitleColor:self.selectedDateTextColor forState:UIControlStateSelected];
     [b setBackgroundImage:self.selectedDateBackgroundImage forState:UIControlStateSelected];
     [b.titleLabel setFont:self.dateFont];
+    [b.titleLabel setTextAlignment:NSTextAlignmentCenter];
 
-    b.selected = [day isEqualToDate:_selectedDate];
+    b.selected = [date isEqualToDate:_selectedDate];
+
+    if ((_startDate && [date compare:_startDate] == NSOrderedAscending) ||
+        (_endDate && [date compare:_endDate] == NSOrderedDescending)) {
+        b.enabled = NO;
+    }
+
     b.tag = index;
 
-    b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    b.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+//    b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+//    b.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 
-    NSDateComponents *components = [_calendar components:NSDayCalendarUnit fromDate:day];
+    NSDateComponents *components = [_calendar components:NSDayCalendarUnit fromDate:date];
     [b setTitle:[NSString stringWithFormat:@"%ld", (long)components.day] forState:UIControlStateNormal];
 
     [b addTarget:self action:@selector(dayButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -171,9 +201,9 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     for (NSInteger i=fromIndex;i<=toIndex;i++) {
         NSArray *days = [self daysForWeekAtIndex:i];
         for (NSUInteger j=0;j<days.count;j++) {
-            UIButton *b = [self buttonForDay:days[j] index:_days.count];
+            UIButton *b = [self buttonForDate:days[j] index:_days.count];
             [_days addObject:days[j]];
-            b.frame = CGRectMake(kHorizontalInset+(i-fromIndex)*self.frame.size.width+j*_dx,kWeekdayLabelHeight,_dx,_dh);
+            b.frame = CGRectMake(_edgeInsets.left+(i-fromIndex)*self.frame.size.width+j*_dx,kWeekdayLabelHeight,_dx,_dh);
             if (b.selected) {
                 _lastSelectedButton = b;
             }
@@ -206,7 +236,17 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     if (dir != 0) {
         NSDateComponents *weeks = [[NSDateComponents alloc] init];
         weeks.week = dir;
-        self.selectedDate = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
+        NSDate *date = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
+
+        // Clip to range
+        if ((_startDate && [date compare:_startDate] == NSOrderedAscending)) {
+            date = _startDate;
+        } else if (_endDate && [date compare:_endDate] == NSOrderedDescending) {
+            date = _endDate;
+        }
+
+        self.selectedDate = date;
+
         [self recenter];
     }
 
@@ -258,6 +298,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 #pragma mark - Helpers
 
 - (NSDate*)dateWithoutTimeFromDate:(NSDate*)date {
+    if (!date) return nil;
     NSDateComponents* components = [_calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
     return [_calendar dateFromComponents:components];
 }
@@ -271,5 +312,23 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
++ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase {
+    // Get weekday titles from current calendar + locale:
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier ? localeIdentifier :[[NSLocale preferredLanguages] firstObject]];
+    NSMutableArray *wds = [NSMutableArray array];
+    for (NSString *s in df.shortWeekdaySymbols) {
+        NSString *clipped = [s substringWithRange:NSMakeRange(0, MIN(length,s.length))];
+        if (uppercase) {
+            clipped = [clipped uppercaseStringWithLocale:df.locale];
+        }
+        [wds addObject:clipped];
+    }
+
+    // ..finally, normalize so monday is at index 0
+    return [[wds subarrayWithRange:NSMakeRange(1, 6)]
+                          arrayByAddingObjectsFromArray:[wds subarrayWithRange:NSMakeRange(0,1)]];
 }
 @end

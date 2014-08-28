@@ -13,7 +13,8 @@
 @property (nonatomic, readonly) NSDate *selectedDate;
 
 // Custom titles for weekday names, starting with Monday.
-// If not set, weekday names from system language will be used.
+// If not set, weekday names from system language with length 1 will be used.
+// See also +weekdayTitlesWithLocaleIdentifier:length:uppercase:
 @property (nonatomic, strong) NSArray *weekdayTitles;
 
 // Current picker range.
@@ -21,16 +22,32 @@
 // Sets the picker range. Supply nil to allow going infinitely into past/future (default).
 - (void)setStartDate:(NSDate *)date endDate:(NSDate *)endDate;
 
-
 #pragma mark - Appearance customization
 
-@property (nonatomic, strong) UIColor *weekdayColor;
+@property (nonatomic, assign) UIEdgeInsets edgeInsets;
+
+@property (nonatomic, strong) UIColor *weekdayTextColor;
 @property (nonatomic, strong) UIFont *weekdayFont;
 
-@property (nonatomic, strong) UIColor *dateColor;
+@property (nonatomic, strong) UIColor *selectedWeekdayTextColor;
+
+@property (nonatomic, strong) UIColor *dateTextColor;
 @property (nonatomic, strong) UIFont *dateFont;
 
+// Color of the date which is out of range set in setStartDate:endDate:
+@property (nonatomic, strong) UIColor *outOfRangeDateTextColor;
+
 @property (nonatomic, strong) UIImage *selectedDateBackgroundImage;
-@property (nonatomic, strong) UIColor *selectedDateColor;
+// This will generate a rectangular background in specified color to be used
+// for selected dates.
+@property (nonatomic, strong) UIColor *selectedDateBackgroundColor;
+
+@property (nonatomic, strong) UIColor *selectedDateTextColor;
+
+#pragma mark - Helpers
+
+// Returns weekday names truncated to specified length.
+// Supply nil for localeIdentifier to use the system language.
++ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase;
 
 @end
