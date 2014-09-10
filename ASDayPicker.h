@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface ASDayPicker : UIView
 
 // Represents the currently selected date. KVO observable.
@@ -21,6 +22,9 @@
 @property (nonatomic, readonly) NSDate *startDate, *endDate;
 // Sets the picker range. Supply nil to allow going infinitely into past/future (default).
 - (void)setStartDate:(NSDate *)date endDate:(NSDate *)endDate;
+
+// The weekday of currently selected date. 0-monday.
+@property (nonatomic, readonly) NSUInteger selectedWeekday;
 
 #pragma mark - Appearance customization
 
@@ -38,9 +42,14 @@
 @property (nonatomic, strong) UIColor *outOfRangeDateTextColor;
 
 @property (nonatomic, strong) UIImage *selectedDateBackgroundImage;
+
 // This will generate a rectangular background in specified color to be used
 // for selected dates.
 @property (nonatomic, strong) UIColor *selectedDateBackgroundColor;
+
+// If set, the selectedDataBackgroundImage/Color will be rendered in the rectangle for the whole day
+// (incl. weekday name). If not set (default), background will be applied only to the date part (a button itself).
+@property (nonatomic, assign) BOOL selectedDateBackgroundExtendsToTop;
 
 @property (nonatomic, strong) UIColor *selectedDateTextColor;
 

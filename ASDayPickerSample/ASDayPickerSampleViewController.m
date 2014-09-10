@@ -11,9 +11,9 @@
 
 - (void)viewDidLoad {
     // Allow picking from today until 4 weeks from now
-    NSDateComponents *weeks = [[NSDateComponents alloc] init];
-    weeks.week = 4;
-    NSDate *endDate = [[NSCalendar currentCalendar] dateByAddingComponents:weeks toDate:[NSDate date] options:0];
+    NSDateComponents *fourWeeks = [[NSDateComponents alloc] init];
+    fourWeeks.day = 4 * 7;
+    NSDate *endDate = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]dateByAddingComponents:fourWeeks toDate:[NSDate date] options:0];
     self.dayPicker.selectedDateBackgroundImage = [UIImage imageNamed:@"selection"];
     [self.dayPicker setStartDate:[NSDate date] endDate:endDate];
     [self.dayPicker addObserver:self forKeyPath:@"selectedDate" options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:nil];

@@ -10,6 +10,14 @@
 static const UIEdgeInsets kDefaultInsets = {0,6.0f,0,6.0f};
 static const CGFloat kWeekdayLabelHeight = 20.0f;
 
+@interface ASDayPickerScrollView : UIScrollView
+@end
+@implementation ASDayPickerScrollView
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
+    return YES;
+}
+@end
+
 @interface ASDayPicker()<UIScrollViewDelegate> {
     NSCalendar *_calendar;
 
@@ -34,10 +42,13 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     _edgeInsets = kDefaultInsets;
 
-    _daysScrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    _daysScrollView = [[ASDayPickerScrollView alloc] initWithFrame:CGRectZero];
     _daysScrollView.showsHorizontalScrollIndicator = NO;
     _daysScrollView.pagingEnabled = YES;
     _daysScrollView.delegate = self;
+    _daysScrollView.canCancelContentTouches = YES;
+    _daysScrollView.delaysContentTouches = YES;
+    _daysScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
 
     [self addSubview:_daysScrollView];
 
@@ -48,8 +59,6 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
         [_weekdayLabels addObject:l];
         [self addSubview:l];
     }
-
-    _selectedDate = [self dateWithoutTimeFromDate:[NSDate date]];
 
     self.weekdayTitles = [ASDayPicker weekdayTitlesWithLocaleIdentifier:nil
                                                                  length:1
@@ -62,6 +71,19 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     self.dateFont = [UIFont systemFontOfSize:17.0f];
     self.weekdayFont = [UIFont systemFontOfSize:12.0f];
     self.weekdayTextColor = [UIColor blackColor];
+
+    self.selectedDate = [self dateWithoutTimeFromDate:[NSDate date]];
+}
+
+- (void)setSelectedDate:(NSDate *)selectedDate {
+    _selectedDate = selectedDate;
+
+    NSDateComponents *components = [_calendar components:NSWeekdayCalendarUnit fromDate:_selectedDate];
+    NSInteger d = components.weekday - 2;
+    if (d < 0) d = 7 + d;
+
+    _selectedWeekday = d;
+    [self recolorWeekdays];
 }
 
 - (void)setSelectedDateBackgroundColor:(UIColor *)selectedDateBackgroundColor {
@@ -74,16 +96,10 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     [self setNeedsLayout];
 }
 
+
 - (void)setEdgeInsets:(UIEdgeInsets)edgeInsets {
     _edgeInsets = edgeInsets;
     [self setNeedsLayout];
-}
-
-- (void)setWeekdayColor:(UIColor *)color {
-    _weekdayTextColor = color;
-    for (UILabel *l in _weekdayLabels) {
-        l.textColor = color;
-    }
 }
 
 - (void)setWeekdayTitles:(NSArray *)weekdayTitles {
@@ -94,11 +110,20 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     }
 }
 
+- (void)recolorWeekdays {
+    for (int i=0;i<7;i++) {
+        ((UILabel*)_weekdayLabels[i]).textColor = (i == _selectedWeekday) ? _selectedWeekdayTextColor : _weekdayTextColor;
+    }
+}
+
 - (void)setWeekdayTextColor:(UIColor *)weekdayTextColor {
     _weekdayTextColor = weekdayTextColor;
-    for (int i=0;i<7;i++) {
-        ((UILabel*)_weekdayLabels[i]).textColor = _weekdayTextColor;
-    }
+    [self recolorWeekdays];
+}
+
+- (void)setSelectedWeekdayTextColor:(UIColor *)selectedWeekdayTextColor {
+    _selectedWeekdayTextColor = selectedWeekdayTextColor;
+    [self recolorWeekdays];
 }
 
 - (void)setWeekdayFont:(UIFont *)font {
@@ -108,6 +133,10 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     }
 }
 
+- (void)setSelectedDateBackgroundExtendsToTop:(BOOL)selectedDateBackgroundExtendsToTop {
+    _selectedDateBackgroundExtendsToTop = selectedDateBackgroundExtendsToTop;
+    [self setNeedsLayout];
+}
 
 - (void)awakeFromNib {
     [self setup];
@@ -137,10 +166,21 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     UIButton *b = [[UIButton alloc] init];
     [b setTitleColor:self.outOfRangeDateTextColor forState:UIControlStateDisabled];
     [b setTitleColor:self.dateTextColor forState:UIControlStateNormal];
+    [b setTitleColor:self.dateTextColor forState:UIControlStateHighlighted];
     [b setTitleColor:self.selectedDateTextColor forState:UIControlStateSelected];
+    [b setTitleColor:self.selectedDateTextColor forState:UIControlStateSelected | UIControlStateHighlighted];
     [b setBackgroundImage:self.selectedDateBackgroundImage forState:UIControlStateSelected];
+    [b setBackgroundImage:self.selectedDateBackgroundImage forState:UIControlStateSelected | UIControlStateHighlighted];
+    [b setTitleColor:self.dateTextColor forState:UIControlStateHighlighted];
+
+
+
     [b.titleLabel setFont:self.dateFont];
     [b.titleLabel setTextAlignment:NSTextAlignmentCenter];
+
+    if (self.selectedDateBackgroundExtendsToTop) {
+        b.contentEdgeInsets = UIEdgeInsetsMake(kWeekdayLabelHeight/2.0, 0, 0, 0);
+    }
 
     b.selected = [date isEqualToDate:_selectedDate];
 
@@ -181,7 +221,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     if (_startDate) {
         NSDateComponents *weeks = [[NSDateComponents alloc] init];
-        weeks.week = -1;
+        weeks.day = -7;
         NSDate *prevDate = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
         if ([prevDate compare:_startDate] == NSOrderedAscending) {
             fromIndex = 0;
@@ -191,19 +231,22 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     
     if (_endDate) {
         NSDateComponents *weeks = [[NSDateComponents alloc] init];
-        weeks.week = 1;
+        weeks.day = 7;
         NSDate *nextDate = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
         if ([nextDate compare:_endDate] == NSOrderedDescending) {
             toIndex = 0;
         }
     }
 
+    CGFloat btnY = self.selectedDateBackgroundExtendsToTop ? 0 : kWeekdayLabelHeight;
+    CGFloat btnHeight = self.selectedDateBackgroundExtendsToTop ? kWeekdayLabelHeight + _dh : _dh;
+
     for (NSInteger i=fromIndex;i<=toIndex;i++) {
         NSArray *days = [self daysForWeekAtIndex:i];
         for (NSUInteger j=0;j<days.count;j++) {
             UIButton *b = [self buttonForDate:days[j] index:_days.count];
             [_days addObject:days[j]];
-            b.frame = CGRectMake(_edgeInsets.left+(i-fromIndex)*self.frame.size.width+j*_dx,kWeekdayLabelHeight,_dx,_dh);
+            b.frame = CGRectMake(_edgeInsets.left+(i-fromIndex)*self.frame.size.width+j*_dx, btnY,_dx, btnHeight);
             if (b.selected) {
                 _lastSelectedButton = b;
             }
@@ -223,8 +266,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     scrollView.userInteractionEnabled = NO;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSInteger dir = 0;
     CGFloat dx = scrollView.contentOffset.x - _scrollStartOffsetX;
     if (dx > 0) {
@@ -235,7 +277,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     if (dir != 0) {
         NSDateComponents *weeks = [[NSDateComponents alloc] init];
-        weeks.week = dir;
+        weeks.day = dir * 7;
         NSDate *date = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
 
         // Clip to range
@@ -248,6 +290,10 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
         self.selectedDate = date;
 
         [self recenter];
+    } else {
+        [UIView animateWithDuration:0.25f animations:^{
+            ((UILabel*)_weekdayLabels[_selectedWeekday]).textColor = _selectedWeekdayTextColor;
+        }];
     }
 
     scrollView.userInteractionEnabled = YES;
@@ -255,6 +301,10 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     _scrollStartOffsetX = scrollView.contentOffset.x;
+
+    [UIView animateWithDuration:0.25f animations:^{
+        ((UILabel*)_weekdayLabels[_selectedWeekday]).textColor = _weekdayTextColor;
+    }];
 }
 
 - (void)setStartDate:(NSDate *)startDate endDate:(NSDate *)endDate {
@@ -267,7 +317,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 // i=0: week containing _selectedDate, i=-1: week before, i=1 week after etc.
 - (NSArray*)daysForWeekAtIndex:(NSInteger)i {
     NSDateComponents *weeks = [[NSDateComponents alloc] init];
-    weeks.week = i;
+    weeks.day = i * 7;
 
     NSDate *d = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
 
