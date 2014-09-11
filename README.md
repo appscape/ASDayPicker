@@ -7,3 +7,8 @@ Day picker for iOS (iPhone) that resembles the Calendar.app's week view:
 ## Usage
 
 See ASDayPickerSample
+
+## Limitations
+
+* Gregorian calendar, 7-day week that starts on monday is presumed
+* Layout/appearance options are very limited
