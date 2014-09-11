@@ -32,7 +32,6 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     NSMutableArray *_days;
     UIButton *_lastSelectedButton;
 }
-@property (nonatomic, strong) NSDate *selectedDate;
 @end
 
 @implementation ASDayPicker
@@ -72,10 +71,17 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     self.weekdayFont = [UIFont systemFontOfSize:12.0f];
     self.weekdayTextColor = [UIColor blackColor];
 
-    self.selectedDate = [self dateWithoutTimeFromDate:[NSDate date]];
+    [self setSelectedDate:[self dateWithoutTimeFromDate:[NSDate date]] recenter:NO];
 }
 
 - (void)setSelectedDate:(NSDate *)selectedDate {
+    [self setSelectedDate:selectedDate recenter:YES];
+}
+
+- (void)setSelectedDate:(NSDate *)selectedDate recenter:(BOOL)recenter {
+    [self willChangeValueForKey:@"selectedDate"];
+    [self willChangeValueForKey:@"selectedWeekday"];
+
     _selectedDate = selectedDate;
 
     NSDateComponents *components = [_calendar components:NSWeekdayCalendarUnit fromDate:_selectedDate];
@@ -84,6 +90,11 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     _selectedWeekday = d;
     [self recolorWeekdays];
+
+    [self didChangeValueForKey:@"selectedWeekday"];
+    [self didChangeValueForKey:@"selectedDate"];
+
+    if (recenter) [self recenter];
 }
 
 - (void)setSelectedDateBackgroundColor:(UIColor *)selectedDateBackgroundColor {
@@ -173,10 +184,8 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     [b setBackgroundImage:self.selectedDateBackgroundImage forState:UIControlStateSelected | UIControlStateHighlighted];
     [b setTitleColor:self.dateTextColor forState:UIControlStateHighlighted];
 
-
-
     [b.titleLabel setFont:self.dateFont];
-    [b.titleLabel setTextAlignment:NSTextAlignmentCenter];
+//    [b.titleLabel setTextAlignment:NSTextAlignmentCenter];
 
     if (self.selectedDateBackgroundExtendsToTop) {
         b.contentEdgeInsets = UIEdgeInsetsMake(kWeekdayLabelHeight/2.0, 0, 0, 0);
@@ -191,7 +200,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     b.tag = index;
 
-//    b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 //    b.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 
     NSDateComponents *components = [_calendar components:NSDayCalendarUnit fromDate:date];
@@ -206,7 +215,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     _lastSelectedButton.selected = NO;
     sender.selected = YES;
     _lastSelectedButton = sender;
-    self.selectedDate = _days[sender.tag];
+    [self setSelectedDate:_days[sender.tag] recenter:NO];
 }
 
 - (void)recenter {
@@ -287,9 +296,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
             date = _endDate;
         }
 
-        self.selectedDate = date;
-
-        [self recenter];
+        [self setSelectedDate:date recenter:YES];
     } else {
         [UIView animateWithDuration:0.25f animations:^{
             ((UILabel*)_weekdayLabels[_selectedWeekday]).textColor = _selectedWeekdayTextColor;

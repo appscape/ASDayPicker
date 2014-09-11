@@ -11,7 +11,7 @@
 @interface ASDayPicker : UIView
 
 // Represents the currently selected date. KVO observable.
-@property (nonatomic, readonly) NSDate *selectedDate;
+@property (nonatomic, strong) NSDate *selectedDate;
 
 // Custom titles for weekday names, starting with Monday.
 // If not set, weekday names from system language with length 1 will be used.
