@@ -15,6 +15,7 @@
     fourWeeks.day = 4 * 7;
     NSDate *endDate = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]dateByAddingComponents:fourWeeks toDate:[NSDate date] options:0];
     self.dayPicker.selectedDateBackgroundImage = [UIImage imageNamed:@"selection"];
+    [self.dayPicker setFirstWeekday:DAY_PICKER_WEEKDAY_MONDAY_FIRST];
     [self.dayPicker setStartDate:[NSDate date] endDate:endDate];
     [self.dayPicker addObserver:self forKeyPath:@"selectedDate" options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:nil];
 }

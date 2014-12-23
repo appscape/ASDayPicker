@@ -31,12 +31,17 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 
     NSMutableArray *_days;
     UIButton *_lastSelectedButton;
+    
+    NSMutableArray *_dateButtons;
 }
 @end
 
 @implementation ASDayPicker
 
 - (void)setup {
+    //set first weekday to sunday
+    _firstWeekday = DAY_PICKER_WEEKDAY_SUNDAY_FIRST;
+    
     _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 
     _edgeInsets = kDefaultInsets;
@@ -59,9 +64,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
         [self addSubview:l];
     }
 
-    self.weekdayTitles = [ASDayPicker weekdayTitlesWithLocaleIdentifier:nil
-                                                                 length:1
-                                                              uppercase:YES];
+    self.weekdayTitles = [ASDayPicker weekdayTitlesWithLocaleIdentifier:nil length:4 uppercase:YES firstWeekday:_firstWeekday];
 
     self.selectedDateBackgroundImage = [ASDayPicker imageWithColor:self.tintColor];
     self.selectedDateTextColor = [UIColor whiteColor];
@@ -72,6 +75,22 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     self.weekdayTextColor = [UIColor blackColor];
 
     [self setSelectedDate:[self dateWithoutTimeFromDate:[NSDate date]] recenter:NO];
+}
+
+- (void) resetDateBtnColor {
+    if (_dateCustomColors != nil && _dateCustomColors.count > 0 && _dateButtons != nil && _dateButtons.count > 0) {
+        NSInteger i = 0;
+        while (i < _dateButtons.count && i < _dateCustomColors.count) {
+            [((UIButton *) _dateButtons[i]) setTitleColor:((UIColor *) _dateCustomColors[i]) forState:UIControlStateNormal];
+            [((UIButton *) _dateButtons[i]) setTitleColor:((UIColor *) _dateCustomColors[i]) forState:UIControlStateHighlighted];
+            i++;
+        }
+    }
+}
+
+- (void) setDateCustomColors:(NSArray *)dateCustomColors {
+    _dateCustomColors = dateCustomColors;
+    [self resetDateBtnColor];
 }
 
 - (void)setSelectedDate:(NSDate *)selectedDate {
@@ -85,7 +104,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     _selectedDate = selectedDate;
 
     NSDateComponents *components = [_calendar components:NSWeekdayCalendarUnit fromDate:_selectedDate];
-    NSInteger d = components.weekday - 2;
+    NSInteger d = components.weekday - _firstWeekday;
     if (d < 0) d = 7 + d;
 
     _selectedWeekday = d;
@@ -216,12 +235,20 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     sender.selected = YES;
     _lastSelectedButton = sender;
     [self setSelectedDate:_days[sender.tag] recenter:NO];
+    
+    //set all button color to custom color, and then reset the selected button color
+    [self resetDateBtnColor];
+    
+    //record the offset of the selected date for setting the selected weekday color
+    _scrollStartOffsetX = _daysScrollView.contentOffset.x;
 }
 
 - (void)recenter {
     for (UIView *v in _daysScrollView.subviews) {
         [v removeFromSuperview];
     }
+    _dateButtons = nil;
+    _dateButtons = [NSMutableArray array];
 
     _days = [NSMutableArray array];
 
@@ -260,6 +287,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
                 _lastSelectedButton = b;
             }
             [_daysScrollView addSubview:b];
+            [_dateButtons addObject:b];
         }
     }
 
@@ -268,6 +296,11 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     _daysScrollView.contentSize = CGSizeMake(pages * self.frame.size.width, self.frame.size.height);
 
     _daysScrollView.contentOffset = CGPointMake(fromIndex != 0 ? self.frame.size.width : 0, 0);
+    
+    //record the offset of the selected date for setting the selected weekday color
+    _scrollStartOffsetX = _daysScrollView.contentOffset.x;
+    //set custom date btn color
+    [self resetDateBtnColor];
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
@@ -276,39 +309,16 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSInteger dir = 0;
-    CGFloat dx = scrollView.contentOffset.x - _scrollStartOffsetX;
-    if (dx > 0) {
-        dir = 1;
-    } else if (dx < 0 ){
-        dir = -1;
-    }
-
-    if (dir != 0) {
-        NSDateComponents *weeks = [[NSDateComponents alloc] init];
-        weeks.day = dir * 7;
-        NSDate *date = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
-
-        // Clip to range
-        if ((_startDate && [date compare:_startDate] == NSOrderedAscending)) {
-            date = _startDate;
-        } else if (_endDate && [date compare:_endDate] == NSOrderedDescending) {
-            date = _endDate;
-        }
-
-        [self setSelectedDate:date recenter:YES];
-    } else {
+    // Don't change the selected date automaticlly
+    if (scrollView.contentOffset.x == _scrollStartOffsetX) {
         [UIView animateWithDuration:0.25f animations:^{
-            ((UILabel*)_weekdayLabels[_selectedWeekday]).textColor = _selectedWeekdayTextColor;
+            [self recolorWeekdays];
         }];
     }
-
     scrollView.userInteractionEnabled = YES;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    _scrollStartOffsetX = scrollView.contentOffset.x;
-
     [UIView animateWithDuration:0.25f animations:^{
         ((UILabel*)_weekdayLabels[_selectedWeekday]).textColor = _weekdayTextColor;
     }];
@@ -329,7 +339,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     NSDate *d = [_calendar dateByAddingComponents:weeks toDate:_selectedDate options:0];
 
     NSDateComponents *components = [_calendar components:NSWeekdayCalendarUnit fromDate:d];
-    NSInteger before = components.weekday - 2;
+    NSInteger before = components.weekday - _firstWeekday;
     if (before < 0) before = 7 + before;
     NSInteger after = 6 - before;
 
@@ -371,7 +381,7 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
     return image;
 }
 
-+ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase {
++ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase firstWeekday:(NSInteger)firstWeekday{
     // Get weekday titles from current calendar + locale:
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     df.locale = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier ? localeIdentifier :[[NSLocale preferredLanguages] firstObject]];
@@ -384,8 +394,14 @@ static const CGFloat kWeekdayLabelHeight = 20.0f;
         [wds addObject:clipped];
     }
 
-    // ..finally, normalize so monday is at index 0
-    return [[wds subarrayWithRange:NSMakeRange(1, 6)]
-                          arrayByAddingObjectsFromArray:[wds subarrayWithRange:NSMakeRange(0,1)]];
+    if (firstWeekday == DAY_PICKER_WEEKDAY_MONDAY_FIRST) {
+//         ..finally, normalize so monday is at index 0
+        return [[wds subarrayWithRange:NSMakeRange(1, 6)] arrayByAddingObjectsFromArray:[wds subarrayWithRange:NSMakeRange(0,1)]];
+    } else if (firstWeekday == DAY_PICKER_WEEKDAY_SUNDAY_FIRST) {
+        //above is an array of weekday title with monday on the first, but we need the sunday on the first, so just return the wds directly
+        return wds;
+    } else {
+        return wds;
+    }
 }
 @end

@@ -7,8 +7,13 @@
 
 #import <UIKit/UIKit.h>
 
+static NSInteger DAY_PICKER_WEEKDAY_SUNDAY_FIRST = 1;
+static NSInteger DAY_PICKER_WEEKDAY_MONDAY_FIRST = 2;
 
 @interface ASDayPicker : UIView
+
+//Custom the first day of the weekday, dufault is sunday
+@property (nonatomic, assign) NSInteger firstWeekday;
 
 // Represents the currently selected date. KVO observable.
 @property (nonatomic, strong) NSDate *selectedDate;
@@ -53,10 +58,13 @@
 
 @property (nonatomic, strong) UIColor *selectedDateTextColor;
 
+//Use this array to set color for every date
+@property (strong, nonatomic) NSArray *dateCustomColors;
+
 #pragma mark - Helpers
 
 // Returns weekday names truncated to specified length.
 // Supply nil for localeIdentifier to use the system language.
-+ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase;
++ (NSArray*)weekdayTitlesWithLocaleIdentifier:(NSString*)localeIdentifier length:(NSUInteger)length uppercase:(BOOL)uppercase firstWeekday:(NSInteger)firstWeekday;
 
 @end
