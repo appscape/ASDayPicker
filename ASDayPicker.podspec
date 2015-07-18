@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.screenshots     = "https://github.com/appscape/ASDayPicker/raw/master/Screenshots/animation.gif"
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { "Esad Hajdarevic" => "esad@esse.at" }
-  s.source           = { :git => "https://github.com/appscape/ASDayPicker.git", :commit => e7425cd961575637043fc1efeb65cc11d90efc9c }
+  s.source           = { :git => "https://github.com/appscape/ASDayPicker.git", :tag => s.version.to_s }
   s.social_media_url = 'http://twitter.com/esad'
 
   s.ios.deployment_target = '7.0'
